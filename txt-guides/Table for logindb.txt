@@ -1,0 +1,11 @@
+Table for logindb
+
+CREATE TABLE users (
+id INT AUTO_INCREMENT PRIMARY KEY,
+patient__id VARCHAR(50) NOT NULL UNIQUE,
+password VARCHAR(255) NOT NULL
+);
+
+INSERT INTO users (patient__id, password) VALUES ('1234', '$2y$10$f8rEowK7WdTzhEKEUdabk.YR7anWL.BgnkJ5uWAjS4gT2ENn504cK')
+
+Password: admin123
