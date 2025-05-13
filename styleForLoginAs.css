@@ -1,0 +1,111 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+}
+
+body,
+html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #054a91;
+}
+
+.main-container {
+    background-image: url("pics/roberto-sorin-qPegD_37eQw-unsplash.jpg");
+
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.login-options {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    width: 350px;
+    max-width: 90vw;
+    padding: 40px 30px;
+    box-shadow: 0 8px 32px rgba(15, 50, 110, 0.12);
+    text-align: center;
+    transition: transform 0.3s ease;
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.container:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 40px rgba(30, 70, 180, 0.4);
+}
+
+h1 {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 24px;
+    letter-spacing: 1.2px;
+    color: #043d7c;
+    text-shadow: 1px 1px 3px rgba(0, 60, 120, 0.25);
+}
+
+.description {
+    font-weight: 500;
+    font-size: 1rem;
+    color: #124a9d;
+    margin-bottom: 32px;
+    line-height: 1.5;
+    min-height: 60px; /* makes descriptions same height */
+}
+
+.btn-login {
+    padding: 18px 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    color: #f0f9ff;
+    width: 100%;
+    background: linear-gradient(135deg, #74a9ff 0%, #3d7eff 100%);
+    box-shadow: 0 6px 18px rgba(50, 103, 255, 0.35);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease,
+        transform 0.2s ease;
+    user-select: none;
+    text-shadow: 0 1px 2px rgba(0, 45, 110, 0.7);
+}
+
+.btn-login:hover,
+.btn-login:focus {
+    background: linear-gradient(135deg, #a3c1ff 0%, #527fff 100%);
+    box-shadow: 0 10px 25px rgba(48, 97, 254, 0.65),
+        inset 0 -2px 5px rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+    outline: none;
+}
+
+.btn-login:active {
+    background: linear-gradient(135deg, #3a68d3 0%, #2b54b4 100%);
+    box-shadow: none;
+    transform: translateY(0);
+}

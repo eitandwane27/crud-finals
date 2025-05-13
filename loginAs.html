@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Login Options</title>
+        <link rel="stylesheet" href="styleForLoginAs.css" />
+    </head>
+    <body>
+        <div class="main-container">
+            <div class="login-options">
+                <section
+                    class="container patient-container"
+                    role="main"
+                    aria-label="Patient login"
+                >
+                    <h1>Patient Login</h1>
+                    <p class="description">
+                        Access your health records, appointments, and
+                        prescriptions.
+                    </p>
+                    <a href="loginInterface.php" target="_blank">
+                        <button
+                            class="btn-login"
+                            type="button"
+                            aria-label="Login as Patient"
+                        >
+                            Login as Patient
+                        </button>
+                    </a>
+                </section>
+
+                <section
+                    class="container admin-container"
+                    role="main"
+                    aria-label="Admin login"
+                >
+                    <h1>Admin Login</h1>
+                    <p class="description">
+                        Manage hospital data, patient records, and staff
+                        schedules.
+                    </p>
+                    <button
+                        class="btn-login"
+                        type="button"
+                        aria-label="Login as Admin"
+                    >
+                        Login as Admin
+                    </button>
+                </section>
+            </div>
+        </div>
+    </body>
+</html>

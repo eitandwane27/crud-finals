@@ -1,0 +1,83 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url(pics/artur-tumasjan-qLzWvcQq-V8-unsplash.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+.main-container {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    padding: 40px;
+    text-align: center;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #054a91;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group label {
+    font-size: 1rem;
+    color: #054a91;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.tb {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #a0c8ff;
+    border-radius: 8px;
+    outline: none;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.tb:focus {
+    border-color: #3d7eff;
+}
+
+#button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #74a9ff 0%, #3d7eff 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#button:hover {
+    background: linear-gradient(135deg, #a3c1ff 0%, #527fff 100%);
+    transform: translateY(-2px);
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
