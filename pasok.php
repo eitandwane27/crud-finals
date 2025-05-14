@@ -1,9 +1,22 @@
 <?php
+ include 'db-login.php';
 session_start();
 if (!isset($_SESSION['patient_name'])) {
     header("Location: loginInterface.php");
     exit();
 }
+//test#########################################################################################
+
+$id = $_SESSION['id'];
+
+$stmt = $conn->prepare("SELECT fullname, age ,address, contact, _doc, _appointment, _meds,_test,photo FROM user_info WHERE id = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+$userInfo = $result->fetch_assoc();
+
+//test##########################################################################################
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +36,7 @@ if (!isset($_SESSION['patient_name'])) {
             <div class="sidebar-header">
                 <div class="profile-info">
                     <div class="avatar">
-                        <i class="fas fa-user-circle"></i>
+                        <img src="uploads/<?= htmlspecialchars($userInfo['photo']); ?>" alt="User Avatar">
                     </div>
                     <h3><?= $_SESSION['patient_name'] ?></h3>
                     <p>Patient ID: #<?= $_SESSION['patient__id'] ?></p>
@@ -40,8 +53,8 @@ if (!isset($_SESSION['patient_name'])) {
                     </li>
                     <li id="nav-appointments">
                         <a href="#">
-                            <i class="fas fa-calendar-check"></i>
-                            <span>Appointments</span>
+                            <i class="fas fa-user-md"></i>
+                            <span>Assigned Doctors</span>
                         </a>
                     </li>
                     <li id="nav-medications">
@@ -61,7 +74,7 @@ if (!isset($_SESSION['patient_name'])) {
             </nav>
             
             <div class="sidebar-footer">
-                <a href="logout.php" class="logout-btn">
+                <a href="landingPage2.html" class="logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </a>
@@ -99,7 +112,13 @@ if (!isset($_SESSION['patient_name'])) {
                     </div>
                     <div class="stat-info">
                         <h3>Upcoming Appointments</h3>
-                        <p>2</p>
+                       
+
+                        <p><?= htmlspecialchars($userInfo['_appointment']) ?></p>
+                        
+
+                        
+                        
                     </div>
                 </div>
                 
@@ -108,8 +127,8 @@ if (!isset($_SESSION['patient_name'])) {
                         <i class="fas fa-prescription-bottle-alt"></i>
                     </div>
                     <div class="stat-info">
-                        <h3>Active Medications</h3>
-                        <p>5</p>
+                        <h3>Recent Findings</h3>
+                        <p><?= htmlspecialchars($userInfo['_meds']) ?></p>
                     </div>
                 </div>
                 
@@ -119,7 +138,7 @@ if (!isset($_SESSION['patient_name'])) {
                     </div>
                     <div class="stat-info">
                         <h3>Recent Tests</h3>
-                        <p>3</p>
+                        <p><?= htmlspecialchars($userInfo['_test']) ?></p>
                     </div>
                 </div>
             </div>
@@ -128,13 +147,13 @@ if (!isset($_SESSION['patient_name'])) {
             <div class="content-grid">
                 <div class="appointments-card">
                     <div class="card-header">
-                        <h3>Recent Appointments</h3>
+                        <h3>Assigned Doctors</h3>
                         <a href="#" class="view-all">View All</a>
                     </div>
                     <div class="appointment-list">
                         <div class="appointment-item">
                             <div class="appointment-details">
-                                <h4>Dr. Sarah Johnson</h4>
+                                <h4><?= htmlspecialchars($userInfo['_doc']) ?></h4>
                                 <p>Cardiology Consultation</p>
                                 <span class="appointment-date"><i class="far fa-calendar"></i> May 15, 2023 - 10:00 AM</span>
                             </div>
@@ -196,9 +215,18 @@ if (!isset($_SESSION['patient_name'])) {
   </div>
 </div>
 <div id="dashboard-medications" class="section" style="display: none;">
-            <div class="content-grid">
+<div class="content-grid">
     <div class="profile-card">
       <h3>Medications</h3>
+      <p></p>
+      <p></p>
+    </div>
+  </div>
+</div>
+<div id="dashboard-healthrecords" class="section" style="display: none;"> 
+            <div class="content-grid">
+    <div class="profile-card">
+      <h3>Health Records</h3>
       <p></p>
       <p></p>
     </div>

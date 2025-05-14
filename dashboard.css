@@ -50,13 +50,27 @@ body {
 
 .profile-info {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .avatar {
-    font-size: 60px;
-    color: rgba(255, 255, 255, 0.9);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%; 
+    overflow: hidden;
     margin-bottom: 10px;
+    border: 2px solid #fff; 
 }
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    display: block;
+}
+
 
 .profile-info h3 {
     font-size: 18px;
