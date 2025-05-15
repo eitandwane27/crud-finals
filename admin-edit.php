@@ -27,7 +27,15 @@ if (isset($_GET['id'])) {
     
     Contact: <input type="text" name="contact" value="<?= htmlspecialchars($row['contact']) ?>" required><br><br>
 
-    Doctor in charge: <input type="text" name="_doc" value="<?= htmlspecialchars($row['_doc']) ?>" required><br><br>
+    <label for="_doc">Doctor in charge:</label>
+    
+    <select name="_doc" required>
+    <option value="Dr. Marvin Acuin">Dr. Marvin Acuin</option>
+    <option value="Dr. Eitan Maceda">Dr. Eitan Maceda</option>
+    <option value="Dr. David Heard">Dr. David Heard</option>
+    </select>
+    
+    <br><br>
     
     Appointment: <input type="text" name="_appointment" value="<?= htmlspecialchars($row['_appointment']) ?>"><br><br>
     

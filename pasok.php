@@ -163,7 +163,7 @@ $userInfo = $result->fetch_assoc();
                         </div>
                         <div class="appointment-item">
                             <div class="appointment-details">
-                                <h4>Dr. Michael Chen</h4>
+                                <h4><?= htmlspecialchars($userInfo['_doc']) ?></h4>
                                 <p>Annual Checkup</p>
                                 <span class="appointment-date"><i class="far fa-calendar"></i> June 2, 2023 - 2:30 PM</span>
                             </div>
@@ -208,7 +208,7 @@ $userInfo = $result->fetch_assoc();
             <div id="dashboard-appointments" class="section" style="display: none;"> 
             <div class="content-grid">
     <div class="profile-card">
-      <h3>Appointments</h3>
+      <h3>Assigned Doctors</h3>
       <p>Name: John Doe</p>
       <p>Email: john@example.com</p>
     </div>

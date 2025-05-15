@@ -1,0 +1,35 @@
+<h2>Add New Patient</h2>
+<form action="" method="POST" enctype="multipart/form-data">
+    Full Name: <input type="text" name="fullname" required><br><br>
+
+    Age: <input type="text" name="age" required><br><br>
+
+    Address: <input type="text" name="address" required><br><br>
+
+    Contact: <input type="text" name="contact" required><br><br>
+
+    <label for="_doc">Doctor in charge:</label>
+    
+    <select name="_doc" required>
+    <option value="Dr. Marvin Acuin">Dr. Marvin Acuin</option>
+    <option value="Dr. Eitan Maceda">Dr. Eitan Maceda</option>
+    <option value="Dr. David Heard">Dr. David Heard</option>
+    </select>
+    
+    <br><br>
+    
+    Appointment: <input type="text" name="_appointment"><br><br>
+    
+    Findings: <input type="text" name="_meds"><br><br>
+    
+    Tests: <input type="text" name="_test"><br><br>
+    
+    Patient ID (username): <input type="text" name="patient__id" required><br><br>
+    
+    Patient Name (account name): <input type="text" name="patient_name" required><br><br>
+    
+    Password: <input type="password" name="password" required><br><br>
+    
+    Photo: <input type="file" name="photo" accept="image/*" required><br><br>
+    <input type="submit" name="submit" value="Add Patient">
+</form>

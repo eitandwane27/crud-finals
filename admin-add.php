@@ -55,30 +55,105 @@ if (isset($_POST['submit'])) {
 ?>
 
 
-<h2>Add New Patient</h2>
-<form action="" method="POST" enctype="multipart/form-data">
-    Full Name: <input type="text" name="fullname" required><br><br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styleForAdmin-add.css">
+</head>
+<body>
+    <div class="form-container">
+        
+        <form action="" method="POST" enctype="multipart/form-data" class="glass-form">
+        <p class="form-title">New Patient Registration</p>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstname">Full Name</label>
+                    <input type="text" id="firstname" name="fullname" required>
+                </div>
+                
+            </div>
 
-    Age: <input type="text" name="age" required><br><br>
 
-    Address: <input type="text" name="address" required><br><br>
+            <div class="form-row">
 
-    Contact: <input type="text" name="contact" required><br><br>
+            <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" name="age" required>
+                </div>
+            <div class="form-group">
 
-    Doctor in charge: <input type="text" name="_doc" required><br><br>
-    
-    Appointment: <input type="text" name="_appointment"><br><br>
-    
-    Findings: <input type="text" name="_meds"><br><br>
-    
-    Tests: <input type="text" name="_test"><br><br>
-    
-    Patient ID (username): <input type="text" name="patient__id" required><br><br>
-    
-    Patient Name (account name): <input type="text" name="patient_name" required><br><br>
-    
-    Password: <input type="password" name="password" required><br><br>
-    
-    Photo: <input type="file" name="photo" accept="image/*" required><br><br>
-    <input type="submit" name="submit" value="Add Patient">
-</form>
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address" required>
+       </div>            
+            </div>
+            
+            <div class="form-row">
+            <div class="form-group">
+                <label for="_doc">Doctor</label>
+                <select id="_doc" name="_doc" required>
+                    <option value="" disabled selected>Select doctor</option>
+                    <option value="Dr. Marvin Acuin">Dr. Marvin Acuin</option>
+                    <option value="Dr. Eitan Maceda">Dr. Eitan Maceda</option>
+                    <option value="Dr. David Heard">Dr. David Heard</option>
+                </select>
+            </div>
+            <div class="form-group">
+                    <label for="patient_name">Patient Name (Account Name)</label>
+                    <input type="text" id="patient_name" name="patient_name">
+                </div>
+
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="_appointment">Appointment</label>
+                    <input type="number" id="_appointment" name="_appointment">
+                </div>
+                <div class="form-group">
+                    <label for="patient__id">Patient ID (Username)</label>
+                    <input type="text" id="patient__id" name="patient__id" required>
+                </div>
+            </div>
+            <div class="form-row">
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>    
+            <div class="form-group">
+                <label for="password">Contact</label>
+                <input type="text" id="contact" name="contact" required>
+            </div>
+            
+            </div>
+            
+
+            <div class="form-group">
+                <label for="_meds">Medical Findings</label>
+                <textarea id="_meds" name="_meds" rows="2"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="_test">Required Tests</label>
+                <textarea id="_test" name="_test" rows="2"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="photo">Upload Photo</label>
+                <div class="file-upload">
+                    <input type="file" id="photo" name="photo" accept="image/uploads" required>
+                    <span class="file-custom fas fa-upload"></span>
+                </div>
+            </div>
+
+            <button type="submit" name="submit" class="submit-btn">
+               <p class="wala">Register</p>
+            </button>
+        </form>
+    </div>
+</body>
+</html>
