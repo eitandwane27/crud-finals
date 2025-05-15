@@ -3,19 +3,19 @@ session_start();
 include 'db-login.php';
 $error = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $patient__id = $_POST['patient__id'];
-    $password = $_POST['password'];
-    $stmt = $conn->prepare("SELECT * FROM users WHERE patient__id=?");
-    $stmt->bind_param("s", $patient__id);
+    $admin_id = $_POST['admin_id'];
+    $admin_password = $_POST['admin_password'];
+    $stmt = $conn->prepare("SELECT * FROM admin_login WHERE admin_id=?");
+    $stmt->bind_param("s", $admin_id);
     $stmt->execute();
     $result = $stmt->get_result();
     if ($result->num_rows === 1) {
         $user = $result->fetch_assoc();
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['patient__id'] = $patient__id;
-            $_SESSION['patient_name'] = $user['patient_name'];
-            $_SESSION['id'] = $user['id'];
-            header("Location: pasok.php");
+        if (password_verify($admin_password, $user['admin_password'])) {
+            $_SESSION['admin_id'] = $admin_id;
+            
+            
+            header("Location: admin-dash.php");
         } else {
             $error = "Invalid password.";
         }
@@ -30,8 +30,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Login</title>
-    <link rel="stylesheet" href="styleForLogin.css">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="">
 </head>
 <body>
     <div class="main-container">
@@ -39,12 +39,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <form method="POST">
                 <h2 id='login'>Login</h2>
                 <div class="input-group">
-                    <label for="patient__id">Patient ID</label>
-                    <input class='tb' type="text" name="patient__id" required>
+                    <label for="admin_id">Admin ID</label>
+                    <input class='tb' type="text" name="admin_id" required>
                 </div>
                 <div class="input-group">
-                    <label for="password">Password</label>
-                    <input class='tb' type="password" name="password" required>
+                    <label for="admin_password">Password</label>
+                    <input class='tb' type="password" name="admin_password" required>
                 </div>
                 <input id='button' type="submit" value="Login">
                 <p class="error-message"><?= $error ?></p>
