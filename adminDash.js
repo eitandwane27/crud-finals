@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const headerTitle = document.getElementById("main-heading");
     const spanText = document.getElementById("span-text");
 
+
     navDashboard.addEventListener("click", () => {
         patientSection.style.display = "block";
         doctorSection.style.display = "none";
@@ -52,4 +53,5 @@ document.addEventListener("DOMContentLoaded", function () {
         searchSection.style.display = "none";
         teamSection.style.display = "block";
     });
+
 });

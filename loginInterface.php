@@ -34,6 +34,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="styleForLogin.css">
 </head>
 <body>
+
+    <img src="pics/cfaaa2b2-6d00-4776-8998-9a0f254d532b-removebg-preview.png" alt="">
     <div class="main-container">
         <div class="form-container">
             <form method="POST">
@@ -50,6 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <p class="error-message"><?= $error ?></p>
             </form>
         </div>
+        
     </div>
 </body>
 </html>

@@ -2,7 +2,8 @@
 <?php
 if (isset($_POST['submit'])) {
     // Collect form inputs
-    $fullname = $_POST['fullname'];
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
     $age = $_POST['age'];
     $address = $_POST['address'];
     $contact = $_POST['contact'];
@@ -23,10 +24,10 @@ if (isset($_POST['submit'])) {
     if (move_uploaded_file($tmp_name, $upload_path)) {
         // Step 1: Insert into user_info
         $stmt1 = $conn->prepare("
-            INSERT INTO user_info (fullname, age, address, contact,_doc, _appointment, _meds, _test, photo)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO user_info (first_name,last_name, age, address, contact,_doc, _appointment, _meds, _test, photo)
+            VALUES (?, ? , ?, ?, ?, ?, ?, ?, ?, ?)
         ");
-        $stmt1->bind_param("sssssssss", $fullname,$age, $address, $contact, $_doc, $_appointment, $_meds, $_test, $photo);
+        $stmt1->bind_param("ssssssssss", $first_name,$last_name ,$age, $address, $contact, $_doc, $_appointment, $_meds, $_test, $photo);
         
         if ($stmt1->execute()) {
             $last_id = $conn->insert_id; // Get the auto-incremented ID from user_info
@@ -72,8 +73,13 @@ if (isset($_POST['submit'])) {
         <p class="form-title">New Patient Registration</p>
             <div class="form-row">
                 <div class="form-group">
-                    <label for="firstname">Full Name</label>
-                    <input type="text" id="firstname" name="fullname" required>
+                    <label for="first_name">First Name</label>
+                    <input type="text" id="first_name" name="first_name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" required>
                 </div>
                 
             </div>
@@ -100,6 +106,7 @@ if (isset($_POST['submit'])) {
                     <option value="Dr. Marvin Acuin">Dr. Marvin Acuin</option>
                     <option value="Dr. Eitan Maceda">Dr. Eitan Maceda</option>
                     <option value="Dr. David Heard">Dr. David Heard</option>
+                    <option value="Dr. John Rey">Dr. John Rey</option>
                 </select>
             </div>
             <div class="form-group">

@@ -9,7 +9,7 @@ if (!isset($_SESSION['patient_name'])) {
 
 $id = $_SESSION['id'];
 
-$stmt = $conn->prepare("SELECT fullname, age ,address, contact, _doc, _appointment, _meds,_test,photo FROM user_info WHERE id = ?");
+$stmt = $conn->prepare("SELECT first_name,last_name, age ,address, contact, _doc, _appointment, _meds,_test,photo FROM user_info WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();

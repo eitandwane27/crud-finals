@@ -7,6 +7,9 @@
     font-family: "Poppins", sans-serif;
 }
 
+
+
+
 body {
     display: flex;
     justify-content: center;
@@ -15,6 +18,7 @@ body {
     background-image: url(pics/akram-huseyn-NPP0qXVIGDQ-unsplash.jpg);
     background-size: cover;
     background-position: center;
+    width: 100vw;
 }
 
 .main-container {
@@ -81,3 +85,9 @@ h2 {
     margin-top: 10px;
     font-size: 0.9rem;
 }
+
+
+
+
+
+
