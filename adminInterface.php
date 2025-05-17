@@ -33,9 +33,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Admin Login</title>
     <link rel="stylesheet" href="styleForLoginAdmin.css">
 </head>
+    
 <body>
+    
+    
+        
+    
     <div class="main-container">
-        <div class="form-container">
+        
+    <div class="form-container">
             <form method="POST">
                 <h2 id='login'>Login</h2>
                 <div class="input-group">
@@ -51,5 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </form>
         </div>
     </div>
-</body>
+    <div class="placeholder">
+    
+    </div></body>
 </html>

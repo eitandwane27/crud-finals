@@ -1,0 +1,315 @@
+<?php
+session_start();
+$show_success = isset($_SESSION['show_success']) && $_SESSION['show_success'];
+$show_error = isset($_SESSION['show_error']) && $_SESSION['show_error'];
+unset($_SESSION['show_success'], $_SESSION['show_error']);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Landing Page</title>
+    <link rel="stylesheet" href="styleForLandingPage.css" />
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script defer src="app.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="nav-bar">
+            <div class="logo">Logo</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <a href="loginAs.html" target="_blank" class="btn-login">Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="section home-section">
+            <div class="section-container">
+                <div class="hero-content">
+                    <h1 class="animate-on-scroll">JOIN THE REVOLUTION</h1>
+                    <h2 class="animate-on-scroll">The #1 Task-Based Platform for Care Teams</h2>
+                    <p class="lead-text animate-on-scroll">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula.
+                    </p>
+                    <div class="cta-buttons animate-on-scroll">
+                        <a href="#" class="btn-primary">Get Started Now</a>
+                        <a href="#" class="btn-secondary">D ko pa alam</a>
+                    </div>
+                </div>
+                <div class="hero-image animate-on-scroll">
+                    <div class="image-placeholder"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="section services-section">
+            <div class="section-container">
+                <h2 class="section-title animate-on-scroll">Our Services</h2>
+                <p class="section-subtitle animate-on-scroll">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+
+                <div class="services-grid">
+                    <div class="service-card animate-on-scroll">
+                        <div class="service-icon"><i class="fas fa-tasks"></i></div>
+                        <h3>Task Management</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
+
+                    <div class="service-card animate-on-scroll">
+                        <div class="service-icon"><i class="fas fa-users"></i></div>
+                        <h3>Team Collaboration</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
+
+                    <div class="service-card animate-on-scroll">
+                        <div class="service-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3>Performance Analytics</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="section testimonials-section">
+            <div class="section-container">
+                <h2 class="section-title animate-on-scroll">Patient Testimonials</h2>
+                <p class="section-subtitle animate-on-scroll">Hear from those who've experienced our care</p>
+
+                <div class="testimonials-flex-container">
+                    <!-- Testimonial 1 -->
+                    <div class="testimonial-card animate-on-scroll">
+                        <div class="testimonial-image">
+                            <div class="image-placeholder">
+                                <img src="pics/462567465_1289495932226193_8545378951424611502_n.jpg" alt="" class="img-property" />
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            <div class="patient-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <p class="testimonial-text">"Maganda ang serbisyo, dating adik ngayon adik na sayo."</p>
+                            <div class="patient-info">
+                                <h4>Earl Fred Reyes</h4>
+                                <p>Cardiac Patient</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 2 -->
+                    <div class="testimonial-card animate-on-scroll">
+                        <div class="testimonial-image">
+                            <div class="image-placeholder">
+                                <img src="pics/462558992_543182501932913_1174374121030395817_n.jpg" class="img-property" />
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            <div class="patient-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <p class="testimonial-text">"Nurse pa lang, gumagaling na ako."</p>
+                            <div class="patient-info">
+                                <h4>Marvin Acuin</h4>
+                                <p>Diabetic sa Sweet Words</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 3 -->
+                    <div class="testimonial-card animate-on-scroll">
+                        <div class="testimonial-image">
+                            <div class="image-placeholder">
+                                <img src="pics/494819621_1777377559507472_7252744918688497641_n.jpg" alt="" class="img-property" />
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            <div class="patient-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <p class="testimonial-text">"Akala ko appendicitis na, gutom lang pala. Salamat sa accurate diagnosis!"</p>
+                            <div class="patient-info">
+                                <h4>Jr Marcellana</h4>
+                                <p>Gutom-Not-Apendicitis Survivor</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 4 -->
+                    <div class="testimonial-card animate-on-scroll">
+                        <div class="testimonial-image">
+                            <div class="image-placeholder">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            <div class="patient-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <p class="testimonial-text">"Post-surgery care was seamless. Every dressing change and medication happened right on schedule."</p>
+                            <div class="patient-info">
+                                <h4>Michael Chen</h4>
+                                <p>Post-Op Patient</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section contact-section">
+            <div class="section-container">
+                <h2 class="section-title animate-on-scroll">Contact Us</h2>
+                <p class="section-subtitle animate-on-scroll">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+
+                <div class="contact-grid">
+                    <div class="contact-form animate-on-scroll">
+
+                        <?php
+                                if (isset($_GET['msg'])) {
+                                    if ($_GET['msg'] === 'success') {
+                                        echo '<p style="color:green; font-weight:bold;">Thank you for submitting! Your message has been sent successfully.</p>';
+                                    } else if ($_GET['msg'] === 'error') {
+                                        echo '<p style="color:red; font-weight:bold;">Error sending message. Please try again.</p>';
+                                    }
+                                }
+                                ?>
+
+                        <form action="contact_submit.php" method="POST">
+                            <div class="form-group">
+                                <input type="text" name="c_name" placeholder="Your Name" required />
+                            </div>
+                            <div class="form-group">
+                                <input type="email" name="c_email" placeholder="Your Email" required />
+                            </div>
+                            <div class="form-group">
+                                <textarea name="c_message" placeholder="Your Message" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn-primary">Send Message</button>
+                        </form>
+                    </div>
+
+                    <div class="contact-info animate-on-scroll">
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <p>123 Care Street, Health City, HC 12345</p>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <p>+1 (234) 567-8900</p>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <p>info@careclerge.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <div class="logo">Careclerge</div>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-social">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 Careclerge. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+   <!-- Popup Message Container -->
+<div id="popup-message" class="popup <?php echo $show_success ? 'success' : ($show_error ? 'error' : ''); ?>">
+    <p>
+        <?php
+        if ($show_success) {
+            echo "✅ Thank you for submitting! Your message has been sent.";
+        } elseif ($show_error) {
+            echo "❌ Error sending message. Please try again.";
+        }
+        ?>
+    </p>
+</div>
+
+<style>
+    .popup {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #333;
+        color: #fff;
+        padding: 16px 24px;
+        border-radius: 8px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease-in-out;
+        z-index: 9999;
+        font-weight: bold;
+    }
+
+    .popup.success {
+        background-color: #28a745;
+    }
+
+    .popup.error {
+        background-color: #dc3545;
+    }
+
+    .popup.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const popup = document.getElementById("popup-message");
+        if (popup.classList.contains("success") || popup.classList.contains("error")) {
+            popup.classList.add("show");
+            setTimeout(() => {
+                popup.classList.remove("show");
+            }, 4000); // hide after 4 seconds
+        }
+    });
+</script>                                 
+
+
+</body>
+
+
+
+</html>

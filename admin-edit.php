@@ -19,7 +19,9 @@ if (isset($_GET['id'])) {
 
 <h2>Edit Patient Info</h2>
 <form method="POST" enctype="multipart/form-data">
-    Full Name: <input type="text" name="fullname" value="<?= htmlspecialchars($row['fullname']) ?>" required><br><br>
+    First Name: <input type="text" name="first_name" value="<?= htmlspecialchars($row['first_name']) ?>" required><br><br>
+
+    Last Name: <input type="text" name="last_name" value="<?= htmlspecialchars($row['last_name']) ?>" required><br><br>
 
     Age: <input type="number_format" name="age" value="<?= htmlspecialchars($row['age']) ?>" required><br><br>
     
@@ -33,6 +35,7 @@ if (isset($_GET['id'])) {
     <option value="Dr. Marvin Acuin">Dr. Marvin Acuin</option>
     <option value="Dr. Eitan Maceda">Dr. Eitan Maceda</option>
     <option value="Dr. David Heard">Dr. David Heard</option>
+    <option value="Dr. John Rey">Dr. John Rey</option>
     </select>
     
     <br><br>
@@ -58,7 +61,8 @@ if (isset($_GET['id'])) {
 
 <?php
 if (isset($_POST['update'])) {
-    $fullname = $_POST['fullname'];
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
     $age = $_POST['age'];
     $address = $_POST['address'];
     $contact = $_POST['contact'];
@@ -83,10 +87,10 @@ if (isset($_POST['update'])) {
     
     $stmt1 = $conn->prepare("
         UPDATE user_info
-        SET fullname = ?,age = ?, address = ?, contact = ?,_doc = ?, _appointment = ?, _meds = ?, _test = ?, photo = ?
+        SET first_name = ?,last_name = ? ,age = ?, address = ?, contact = ?,_doc = ?, _appointment = ?, _meds = ?, _test = ?, photo = ?
         WHERE id = ?
     ");
-    $stmt1->bind_param("sssssssssi", $fullname,$age , $address, $contact,$_doc, $_appointment, $_meds, $_test, $photo, $id);
+    $stmt1->bind_param("ssssssssssi", $first_name, $last_name ,$age , $address, $contact,$_doc, $_appointment, $_meds, $_test, $photo, $id);
     $stmt1->execute();
 
     
