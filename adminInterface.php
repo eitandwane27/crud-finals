@@ -5,7 +5,7 @@ $error = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $admin_id = $_POST['admin_id'];
     $admin_password = $_POST['admin_password'];
-    $stmt = $conn->prepare("SELECT * FROM admin_login WHERE admin_id=?");
+    $stmt = $conn->prepare("SELECT * FROM admin_login WHERE BINARY admin_id=?");
     $stmt->bind_param("s", $admin_id);
     $stmt->execute();
     $result = $stmt->get_result();

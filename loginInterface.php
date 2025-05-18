@@ -5,7 +5,7 @@ $error = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $patient__id = $_POST['patient__id'];
     $password = $_POST['password'];
-    $stmt = $conn->prepare("SELECT * FROM users WHERE patient__id=?");
+    $stmt = $conn->prepare("SELECT * FROM users WHERE BINARY patient__id=?");
     $stmt->bind_param("s", $patient__id);
     $stmt->execute();
     $result = $stmt->get_result();

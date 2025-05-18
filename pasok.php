@@ -1,30 +1,67 @@
 <?php
 include 'db-login.php';
 session_start();
-if (!isset($_SESSION['patient_name'])) {
+if (!isset($_SESSION['id'])) {
     header("Location: loginInterface.php");
     exit();
 }
 
-// Fetch user data with prepared statement for security
+// Fetch user data securely
 $id = $_SESSION['id'];
 
-$stmt = $conn->prepare("SELECT first_name, last_name, age, address, contact, _doc, _appointment, _meds, _test, photo FROM user_info WHERE id = ?");
+$stmt = $conn->prepare("
+    SELECT 
+        ui.first_name, 
+        ui.last_name, 
+        ui.age, 
+        ui.address, 
+        ui.contact, 
+        ui._doc, 
+        ui._appointment, 
+        ui._meds, 
+        ui._test, 
+        ui.photo,
+        ui.systolic,
+        ui.diastolic,
+        ui.bpm,
+        ui.cholesterol,
+        ui.glucose,
+        ui.last_date,
+        ui.med1,
+        ui.med2,
+        ui.med_sched1,
+        ui.med_sched2,
+        d.spec1
+    FROM user_info ui
+    LEFT JOIN doctors d ON ui._doc = d.id
+    WHERE ui.id = ?
+");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();
 $userInfo = $result->fetch_assoc();
 
-// Ensure data exists and prevent XSS with proper escaping
+// Escape and format data
 $userPhoto = !empty($userInfo['photo']) ? htmlspecialchars($userInfo['photo']) : 'default-avatar.png';
-$fullName = htmlspecialchars($_SESSION['patient_name']);
+$fullName = htmlspecialchars($userInfo['first_name']); // using first_name now
 $patientId = htmlspecialchars($_SESSION['patient__id']);
 
-// Format data safely
 $appointmentInfo = !empty($userInfo['_appointment']) ? htmlspecialchars($userInfo['_appointment']) : 'No upcoming appointments';
 $medicationInfo = !empty($userInfo['_meds']) ? htmlspecialchars($userInfo['_meds']) : 'No current medications';
 $testInfo = !empty($userInfo['_test']) ? htmlspecialchars($userInfo['_test']) : 'No recent tests';
 $doctorInfo = !empty($userInfo['_doc']) ? htmlspecialchars($userInfo['_doc']) : 'No assigned doctor';
+$spec = !empty($userInfo['specialty']) ? htmlspecialchars($userInfo['specialty']) : 'No specialty info available';
+$systolic = !empty($userInfo['systolic']) ? htmlspecialchars($userInfo['systolic']) : 'No systolic info available';
+$diastolic = !empty($userInfo['diastolic']) ? htmlspecialchars($userInfo['diastolic']) : 'No diastolic info available';
+$bpm = !empty($userInfo['bpm']) ? htmlspecialchars($userInfo['bpm']) : 'No bpm info available';
+$cholesterol = !empty($userInfo['cholesterol']) ? htmlspecialchars($userInfo['cholesterol']) : 'No cholesterol info available';
+$glucose = !empty($userInfo['glucose']) ? htmlspecialchars($userInfo['glucose']) : 'No glucose info available';
+$last_date = !empty($userInfo['last_date']) ? htmlspecialchars($userInfo['last_date']) : 'No last_date info available';
+$med1 = !empty($userInfo['med1']) ? htmlspecialchars($userInfo['med1']) : 'No medecine info available';
+$med2 = !empty($userInfo['med2']) ? htmlspecialchars($userInfo['med2']) : 'No medecine info available';
+$med_sched1 = !empty($userInfo['med_sched1']) ? htmlspecialchars($userInfo['med_sched1']) : 'No time info available';
+$med_sched2 = !empty($userInfo['med_sched2']) ? htmlspecialchars($userInfo['med_sched2']) : 'No time info available';
+$contact = !empty($userInfo['contact']) ? htmlspecialchars($userInfo['contact']) : 'No contact info available';
 ?>
 
 
@@ -99,14 +136,8 @@ $doctorInfo = !empty($userInfo['_doc']) ? htmlspecialchars($userInfo['_doc']) : 
             <header class="main-header">
                 <h1>Patient Dashboard</h1>
                 <div class="header-actions">
-                    <div class="notification">
-                        <i class="fas fa-bell"></i>
-                        <span class="badge">2</span>
-                    </div>
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search...">
-                    </div>
+                   
+
                 </div>
             </header>
             
@@ -114,7 +145,7 @@ $doctorInfo = !empty($userInfo['_doc']) ? htmlspecialchars($userInfo['_doc']) : 
                 <div class="welcome-content">
                     <h2>Welcome back, <?= $fullName ?>!</h2>
                     <p>Here's an overview of your health information and upcoming appointments.</p>
-                    <a href="landingPage2.html" class="continue-btn">Continue to Portal</a>
+                   
                 </div>
                 <div class="welcome-image">
                     <img src="https://cdn-icons-png.flaticon.com/512/3004/3004036.png" alt="Healthcare Illustration">
@@ -159,13 +190,13 @@ $doctorInfo = !empty($userInfo['_doc']) ? htmlspecialchars($userInfo['_doc']) : 
                     <div class="appointments-card">
                         <div class="card-header">
                             <h3>Assigned Doctors</h3>
-                            <a href="#" class="view-all">View All</a>
+                            
                         </div>
                         <div class="appointment-list">
                             <div class="appointment-item">
                                 <div class="appointment-details">
                                     <h4><?= $doctorInfo ?></h4>
-                                    <p>Cardiology Consultation</p>
+                                    <p><?=$spec ?></p>
                                     <span class="appointment-date"><i class="far fa-calendar"></i> May 15, 2023 - 10:00 AM</span>
                                 </div>
                                 <div class="appointment-status completed">
@@ -188,7 +219,7 @@ $doctorInfo = !empty($userInfo['_doc']) ? htmlspecialchars($userInfo['_doc']) : 
                     <div class="medications-card">
                         <div class="card-header">
                             <h3>Current Medications</h3>
-                            <a href="#" class="view-all">View All</a>
+                           
                         </div>
                         <div class="medication-list">
                             <div class="medication-item">
@@ -227,10 +258,11 @@ $doctorInfo = !empty($userInfo['_doc']) ? htmlspecialchars($userInfo['_doc']) : 
                                     <img src="https://randomuser.me/api/portraits/men/36.jpg" alt="Doctor Avatar">
                                 </div>
                                 <div class="doctor-info">
-                                    <h4>Dr. Michael Johnson</h4>
+                                    <h4><?=$doctorInfo?></h4>
                                     <p>Cardiologist</p>
-                                    <p>Experience: 15 years</p>
-                                    <p>Contact: dr.johnson@medcenter.com</p>
+                                    <p>Contact #: 0<?=$contact?></p>
+                                    <p>Email: <?=$doctorInfo?>@medcenter.com</p>
+                                    
                                 </div>
                             </div>
                             <div class="doctor-item">
@@ -279,11 +311,11 @@ $doctorInfo = !empty($userInfo['_doc']) ? htmlspecialchars($userInfo['_doc']) : 
                                     <i class="fas fa-pills"></i>
                                 </div>
                                 <div class="prescription-details">
-                                    <h4>Lisinopril <span class="dosage">10mg</span></h4>
+                                    <h4><?=$med1?> <span class="dosage">10mg</span></h4>
                                     <p class="prescription-instructions">Take once daily with food</p>
                                     <div class="prescription-meta">
-                                        <span><i class="far fa-calendar"></i> Refill: May 30, 2023</span>
-                                        <span><i class="far fa-user-md"></i> Dr. Johnson</span>
+                                        <span><i class="far fa-calendar"></i> Refill: Every end of the month</span>
+                                        <span><i class="far fa-user-md"></i> <?=$doctorInfo?></span>
                                     </div>
                                 </div>
                             </div>
@@ -293,11 +325,11 @@ $doctorInfo = !empty($userInfo['_doc']) ? htmlspecialchars($userInfo['_doc']) : 
                                     <i class="fas fa-pills"></i>
                                 </div>
                                 <div class="prescription-details">
-                                    <h4>Atorvastatin <span class="dosage">20mg</span></h4>
+                                    <h4><?=$med2?><span class="dosage">20mg</span></h4>
                                     <p class="prescription-instructions">Take once daily at bedtime</p>
                                     <div class="prescription-meta">
-                                        <span><i class="far fa-calendar"></i> Refill: June 15, 2023</span>
-                                        <span><i class="far fa-user-md"></i> Dr. Chen</span>
+                                        <span><i class="far fa-calendar"></i> Refill: Every end of the month</span>
+                                        <span><i class="far fa-user-md"></i> <?=$doctorInfo?></span>
                                     </div>
                                 </div>
                             </div>
@@ -311,12 +343,12 @@ $doctorInfo = !empty($userInfo['_doc']) ? htmlspecialchars($userInfo['_doc']) : 
                                 <div class="day-header">Today</div>
                                 <div class="day-pills">
                                     <div class="pill-time">
-                                        <span class="time">8:00 AM</span>
-                                        <span class="pill-name">Lisinopril 10mg</span>
+                                        <span class="time"><?=$med_sched1?></span>
+                                        <span class="pill-name"><?=$med1?> 10mg</span>
                                         <span class="pill-status completed">Taken</span>
                                     </div>
                                     <div class="pill-time">
-                                        <span class="time">9:00 PM</span>
+                                        <span class="time"><?=$med_sched2?></span>
                                         <span class="pill-name">Atorvastatin 20mg</span>
                                         <span class="pill-status">Upcoming</span>
                                     </div>
@@ -340,7 +372,7 @@ $doctorInfo = !empty($userInfo['_doc']) ? htmlspecialchars($userInfo['_doc']) : 
                                     <p>General health assessment with blood work and vitals</p>
                                     <div class="history-meta">
                                         <span><i class="fas fa-user-md"></i> Dr. Chen</span>
-                                        <a href="#" class="view-details">View Details</a>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -352,7 +384,7 @@ $doctorInfo = !empty($userInfo['_doc']) ? htmlspecialchars($userInfo['_doc']) : 
                                     <p>Follow-up on hypertension management and heart health</p>
                                     <div class="history-meta">
                                         <span><i class="fas fa-user-md"></i> Dr. Johnson</span>
-                                        <a href="#" class="view-details">View Details</a>
+                                     
                                     </div>
                                 </div>
                             </div>
@@ -364,7 +396,7 @@ $doctorInfo = !empty($userInfo['_doc']) ? htmlspecialchars($userInfo['_doc']) : 
                                     <p>Complete blood count and lipid profile</p>
                                     <div class="history-meta">
                                         <span><i class="fas fa-flask"></i> MedLab</span>
-                                        <a href="#" class="view-details">View Results</a>
+                                     
                                     </div>
                                 </div>
                             </div>
@@ -374,32 +406,64 @@ $doctorInfo = !empty($userInfo['_doc']) ? htmlspecialchars($userInfo['_doc']) : 
                     <div class="profile-card">
                         <h3>Health Metrics</h3>
                         <div class="metrics-container">
-                            <div class="metric-item">
-                                <div class="metric-label">Blood Pressure</div>
-                                <div class="metric-value">120/80 <span class="metric-unit">mmHg</span></div>
-                                <div class="metric-status normal">Normal</div>
-                                <div class="metric-date">Last recorded: May 5, 2023</div>
-                            </div>
+                            <?php
+                                
+                                $systolic = (int)$systolic;
+                                $diastolic = (int)$diastolic;
+
+                                if ($systolic > 120 || $diastolic > 80) {
+                                    $bp_status = 'Not Normal';
+                                    $bp_class = 'not-normal';
+                                } else {
+                                    $bp_status = 'Normal';
+                                    $bp_class = 'normal';
+                                }
+                                ?>
+
+                                <div class="metric-item">
+                                    <div class="metric-label">Blood Pressure</div>
+                                    <div class="metric-value"><?= $systolic ?>/<?= $diastolic ?> <span class="metric-unit">mmHg</span></div>
+                                    <div class="metric-status <?= $bp_class ?>"><?= $bp_status ?></div>
+                                    <div class="metric-date">Last recorded: <?= htmlspecialchars($last_date) ?></div>
+                                </div>
                             
                             <div class="metric-item">
                                 <div class="metric-label">Heart Rate</div>
-                                <div class="metric-value">72 <span class="metric-unit">bpm</span></div>
-                                <div class="metric-status normal">Normal</div>
-                                <div class="metric-date">Last recorded: May 5, 2023</div>
+                                <div class="metric-value"><?= $bpm ?> <span class="metric-unit">bpm</span></div>
+                                
+                                <?php
+                                    $bpm_status = ($bpm > 120) ? 'Not Normal' : 'Normal';
+                                    $bpm_class = ($bpm > 120) ? 'not-normal' : 'normal';
+                                ?>
+                                
+                                <div class="metric-status <?= $bpm_class ?>"><?= $bpm_status ?></div>
+                                <div class="metric-date">Last recorded: <?= $last_date ?></div>
                             </div>
                             
                             <div class="metric-item">
                                 <div class="metric-label">Cholesterol (LDL)</div>
-                                <div class="metric-value">110 <span class="metric-unit">mg/dL</span></div>
-                                <div class="metric-status normal">Normal</div>
-                                <div class="metric-date">Last recorded: Mar 15, 2023</div>
+                                <div class="metric-value"><?=$cholesterol?> <span class="metric-unit">mg/dL</span></div>
+
+                                <?php if ($cholesterol > 200): ?>
+                                    <div class="metric-status not-normal">Not Normal</div>
+                                <?php else: ?>
+                                    <div class="metric-status normal">Normal</div>
+                                <?php endif; ?>
+
+                                <div class="metric-date">Last recorded: <?=$last_date?></div>
                             </div>
                             
                             <div class="metric-item">
                                 <div class="metric-label">Blood Glucose</div>
-                                <div class="metric-value">95 <span class="metric-unit">mg/dL</span></div>
-                                <div class="metric-status normal">Normal</div>
-                                <div class="metric-date">Last recorded: Mar 15, 2023</div>
+                                <div class="metric-value"><?=$glucose?> <span class="metric-unit">mg/dL</span></div>
+
+                                <?php if ($glucose < 70 || $glucose > 100): ?>
+                                    <div class="metric-status not-normal">Not Normal</div>
+                                <?php else: ?>
+                                    <div class="metric-status normal">Normal</div>
+                                <?php endif; ?>
+
+                                <div class="metric-date">Last recorded: <?=$last_date?></div>
                             </div>
                         </div>
                     </div>
