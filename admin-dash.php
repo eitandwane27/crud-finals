@@ -2,6 +2,29 @@
     include "db-login.php";
     session_start();
     ?>
+<?php
+
+$sql = "SELECT id, fname, lname, spec1,spec2,spec3,spec4, contact FROM doctors";
+$result = $conn->query($sql);
+
+
+$doctors = [];
+
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $doctors[] = [
+            'id' => $row['id'],
+            'first_name' => $row['fname'],
+            'last_name' => $row['lname'],
+            'spec1' => $row['spec1'],
+            'spec2' => $row['spec2'],
+            'spec3' => $row['spec3'],
+            'spec4' => $row['spec4'],
+            'contact' => $row['contact']
+        ];
+    }
+}
+?>
 
     <!DOCTYPE html>
     <html lang="en" data-theme="light">
@@ -15,6 +38,11 @@
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     </head>
     <body>
+
+
+
+
+
         <!-- Add Zoom Modal -->
         <div class="zoom-modal" id="imageZoomModal">
             <button class="close-btn" id="closeZoomModal">
@@ -62,7 +90,7 @@
                     </ul>
                 </nav>
                 <div class="sidebar-footer">
-                    <a href="landingPage2.html" class="logout-btn">
+                    <a href="landingPage2.php" class="logout-btn">
                         <i class="fas fa-sign-out-alt"></i>
                         <span>Logout</span>
                     </a>
@@ -114,6 +142,7 @@
                                             <th>Photo</th>
                                             <th>First Name</th>
                                             <th>Last Name</th>
+                                            <th>Sex</th>
                                             <th>Age</th>
                                             <th>Contact</th>
                                             <th>Doctor</th>
@@ -131,8 +160,8 @@
                                             SELECT 
                                                 user_info.*, 
                                                 users.patient__id, 
-                                                users.password,
-                                                users.patient_name
+                                                users.password
+                                                
                                             FROM user_info 
                                             INNER JOIN users ON user_info.id = users.id
                                         ";
@@ -166,6 +195,7 @@
                                                     <td>
                                                         <strong>{$row['last_name']}</strong>
                                                     </td>
+                                                    <td>{$row['_sex']}</td>
                                                     <td>{$row['age']}</td>
                                                     <td>{$row['contact']}</td>
                                                     <td>{$row['_doc']}</td>
@@ -201,6 +231,9 @@
                     </div>
                 </div>
 
+
+                 
+                
                 
                 
                 <div class="content-wrapper" id="dashboard-doctors" style="display: none;">
@@ -243,17 +276,19 @@
                                                 <small>ID: DOC001</small>
                                             </td>
                                             <td>
-                                                <strong>Dr. Marvin Acuin</strong>
+                                                
+                                                <strong>Dr. <?php echo  $doctors[0]['first_name']; ?>   <?php echo $doctors[0]['last_name']; ?> </strong>
                                             </td>
                                             <td>
                                                 <div class="specialties-list">
-                                                    <span class="specialty-tag">Gynecology</span>
-                                                    <span class="specialty-tag">Anesthesiologist</span>
-                                                    <span class="specialty-tag">Plastic surgery</span>
-                                                    <span class="specialty-tag">Dermatology</span>
+                                                    <span class="specialty-tag"><?php echo  $doctors[0]['spec1']; ?></span>
+                                                    <span class="specialty-tag"><?php echo  $doctors[0]['spec2']; ?></span>
+                                                    <span class="specialty-tag"><?php echo  $doctors[0]['spec3']; ?></span>
+                                                    <span class="specialty-tag"><?php echo  $doctors[0]['spec4']; ?></span>
+                                                    
                                                 </div>
                                             </td>
-                                            <td>+1 234 567 890</td>
+                                            <td>0<?php echo  $doctors[0]['contact']; ?></td>
                                             <td>Mon-Fri, 9AM-5PM</td>
                                             <td>42 Active</td>
                                             <td><span class="status-badge active">On Duty</span></td>
@@ -278,18 +313,18 @@
                                                 <small>ID: DOC002</small>
                                             </td>
                                             <td>
-                                                <strong>Dr. Eitan Maceda</strong>
+                                                <strong>Dr.  <?php echo  $doctors[2]['first_name']; ?>   <?php echo $doctors[2]['last_name']; ?></strong>
                                             </td>
                                             <td>
                                                 <div class="specialties-list">
-                                                    <span class="specialty-tag">Cardiologist</span>
-                                                    <span class="specialty-tag">Neurosurgeon</span>
-                                                    <span class="specialty-tag">Military Surgeon</span>
-                                                    <span class="specialty-tag">ER Doctor</span>
-                                                    <span class="specialty-tag">Toxicologist</span>
+                                                    <span class="specialty-tag"><?php echo  $doctors[2]['spec1']; ?></span>
+                                                    <span class="specialty-tag"><?php echo  $doctors[2]['spec2']; ?></span>
+                                                    <span class="specialty-tag"><?php echo  $doctors[2]['spec3']; ?></span>
+                                                    <span class="specialty-tag"><?php echo  $doctors[2]['spec4']; ?></span>
+                                                   
                                                 </div>
                                             </td>
-                                            <td>+1 234 567 891</td>
+                                            <td>0<?php echo  $doctors[2]['contact']; ?></td>
                                             <td>Mon-Thu, 10AM-6PM</td>
                                             <td>38 Active</td>
                                             <td><span class="status-badge active">On Duty</span></td>
@@ -314,17 +349,17 @@
                                                 <small>ID: DOC003</small>
                                             </td>
                                             <td>
-                                                <strong>Dr. David Heard</strong>
+                                                <strong>Dr. <?php echo  $doctors[1]['first_name']; ?>   <?php echo $doctors[1]['last_name']; ?></strong>
                                             </td>
                                             <td>
                                                 <div class="specialties-list">
-                                                    <span class="specialty-tag">Nuclear Medicine</span>
-                                                    <span class="specialty-tag">Radiology</span>
-                                                    <span class="specialty-tag">Anesthesiology</span>
-                                                    <span class="specialty-tag">Forensic Pathology</span>
+                                                    <span class="specialty-tag"><?php echo  $doctors[1]['spec1']; ?></span>
+                                                    <span class="specialty-tag"><?php echo  $doctors[1]['spec2']; ?></span>
+                                                    <span class="specialty-tag"><?php echo  $doctors[1]['spec3']; ?></span>
+                                                    <span class="specialty-tag"><?php echo  $doctors[1]['spec4']; ?></span>
                                                 </div>
                                             </td>
-                                            <td>+1 234 567 892</td>
+                                            <td>0<?php echo  $doctors[1]['contact']; ?></td>
                                             <td>Tue-Sat, 8AM-4PM</td>
                                             <td>45 Active</td>
                                             <td><span class="status-badge active">On Duty</span></td>
@@ -349,17 +384,17 @@
                                                 <small>ID: DOC004</small>
                                             </td>
                                             <td>
-                                                <strong>Dr. John Rey</strong>
+                                                <strong>Dr. <?php echo  $doctors[3]['first_name']; ?>   <?php echo $doctors[3]['last_name']; ?></strong>
                                             </td>
                                             <td>
                                                 <div class="specialties-list">
-                                                    <span class="specialty-tag">Virologist</span>
-                                                    <span class="specialty-tag">Oncologists</span>
-                                                    <span class="specialty-tag">Colorectal Surgeon</span>
-                                                    <span class="specialty-tag">Psychiatrist</span>
+                                                    <span class="specialty-tag"><?php echo  $doctors[3]['spec1']; ?></span>
+                                                    <span class="specialty-tag"><?php echo  $doctors[3]['spec1']; ?></span>
+                                                    <span class="specialty-tag"><?php echo  $doctors[3]['spec1']; ?></span>
+                                                    <span class="specialty-tag"><?php echo  $doctors[3]['spec1']; ?></span>
                                                 </div>
                                             </td>
-                                            <td>+1 234 567 893</td>
+                                            <td>0<?php echo  $doctors[3]['contact']; ?></td>
                                             <td>Mon-Fri, 9AM-5PM</td>
                                             <td>50 Active</td>
                                             <td><span class="status-badge active">On Duty</span></td>
@@ -383,7 +418,7 @@
                                                 <small>ID: DOC004</small>
                                             </td>
                                             <td>
-                                                <strong>Dr. Earl Fred Reyes</strong>
+                                                <strong>Dr. <?php echo  $doctors[4]['first_name']; ?>   <?php echo $doctors[4]['last_name']; ?></strong>
                                             </td>
                                             <td>
                                                 <div class="specialties-list">
@@ -393,7 +428,7 @@
                                                     <span class="specialty-tag">Psychiatrist</span>
                                                 </div>
                                             </td>
-                                            <td>+1 234 567 893</td>
+                                            <td>0<?php echo  $doctors[4]['contact']; ?></td>
                                             <td>Mon-Fri, 9AM-5PM</td>
                                             <td>50 Active</td>
                                             <td><span class="status-badge active">On Duty</span></td>
@@ -413,7 +448,7 @@
                             </div>
                             <div class="table-footer">
                                 <div class="table-info">
-                                    Showing 4 doctor records
+                                     Showing <?= count($doctors) ?> doctor records
                                 </div>
                             </div>
                         </div>
@@ -483,7 +518,7 @@
                                         </div>
                                     </div>
                                     <div class="member-info">
-                                        <h3>David T. Heard</h3>
+                                        <h3>David M. Heard</h3>
                                         <p class="role">Back-end Developer</p>
                                         <div class="member-stats-mini">
                                             <span>2nd Year</span>
