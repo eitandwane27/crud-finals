@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
 
-    <img src="pics/cfaaa2b2-6d00-4776-8998-9a0f254d532b-removebg-preview.png" alt="">
+    <!-- <img src="pics/cfaaa2b2-6d00-4776-8998-9a0f254d532b-removebg-preview.png" alt=""> -->
     <div class="main-container">
         <div class="form-container">
             <form method="POST">

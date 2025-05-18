@@ -1,10 +1,10 @@
-    <?php 
+<?php 
     include "db-login.php";
     session_start();
     ?>
 
     <!DOCTYPE html>
-    <html lang="en">
+    <html lang="en" data-theme="light">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +15,17 @@
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     </head>
     <body>
+        <!-- Add Zoom Modal -->
+        <div class="zoom-modal" id="imageZoomModal">
+            <button class="close-btn" id="closeZoomModal">
+                <i class="fas fa-times"></i>
+            </button>
+            <img src="" alt="Zoomed Image" id="zoomedImage">
+        </div>
+        
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+            <i class="fas fa-moon"></i>
+        </button>
         <div class="dashboard-container">
             <!-- Sidebar Navigation -->
             <aside class="sidebar">
@@ -34,12 +45,6 @@
                             </a>
                         </li>
                         
-                        <li id="nav-patients">
-                            <a href="#">
-                                <i class="fas fa-hospital-user"></i>
-                                <span>Recent Patients</span>
-                            </a>
-                        </li>
 
                         <li id="nav-doctors">
                             <a href="#">
@@ -74,13 +79,19 @@
                             <a href="#">Dashboard</a> / <span id="span-text">Patients</span>
                         </div>
                     </div>
-                    <div class="header-actions">
-                        <div class="header-actions">
-                            <form method="GET" class="search-box" id="search">
-                                <input type="text" name="search" placeholder="Search by full name..." value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
-                                <button type="submit"><i class="fas fa-search"></i></button>
-                            </form>
-                        </div>
+                    <div class="header-actions" id="header-search">
+                        <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="GET" class="search-box" id="search">
+                            <input 
+                                type="text" 
+                                name="search" 
+                                placeholder="Search by full name..." 
+                                value="<?= isset($_GET['search']) ? htmlspecialchars(trim($_GET['search'])) : '' ?>"
+                                autocomplete="off"
+                            >
+                            <button type="submit" aria-label="Search">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </form>
                     </div>
                 </header>
 
@@ -115,59 +126,67 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
-
+                                        // Base SQL query - always show all patients by default
                                         $sql = "
-                                                SELECT 
-                                                        user_info.*, 
-                                                        users.patient__id, 
-                                                        users.password,
-                                                        users.patient_name
-                                                    FROM user_info 
-                                                    INNER JOIN users ON user_info.id = users.id
-                                                ";
+                                            SELECT 
+                                                user_info.*, 
+                                                users.patient__id, 
+                                                users.password,
+                                                users.patient_name
+                                            FROM user_info 
+                                            INNER JOIN users ON user_info.id = users.id
+                                        ";
 
-                                            if (!empty($search) && strlen($search) > 1) {
-                                                $safeSearch = $conn->real_escape_string($search);
-                                                $sql .= " WHERE user_info.first_name LIKE '$safeSearch%' 
-                                                        OR user_info.last_name LIKE '% $safeSearch%'";
-                                            }
+                                        // Only filter if there's a non-empty search term
+                                        if (isset($_GET['search']) && trim($_GET['search']) !== '') {
+                                            $search = trim($_GET['search']);
+                                            $safeSearch = $conn->real_escape_string($search);
+                                            $sql .= " WHERE user_info.first_name LIKE '$safeSearch%' 
+                                                    OR user_info.last_name LIKE '$safeSearch%'
+                                                    OR CONCAT(user_info.first_name, ' ', user_info.last_name) LIKE '%$safeSearch%'";
+                                        }
 
-                                            $result = $conn->query($sql);
+                                        // Add ORDER BY clause
+                                        $sql .= " ORDER BY user_info.first_name ASC, user_info.last_name ASC";
+
                                         $result = $conn->query($sql);
-                                        while ($row = $result->fetch_assoc()) {
-                                        echo "<tr>
-                                        <td>
-                                            <div class='patient-avatar'>
-                                                <img src='uploads/{$row['photo']}' alt='Patient Photo'>
-                                            </div>
-                                            <small>ID: {$row['patient__id']}</small>
-                                        </td>
-                                        <td>
-                                            <strong>{$row['first_name']}</strong>
-                                        </td>
-                                        <td>
-                                            <strong>{$row['last_name']}</strong>
-                                        </td>
-                                        <td>{$row['age']}</td>
-                                        <td>{$row['contact']}</td>
-                                        <td>{$row['_doc']}</td>
-                                        <td>{$row['_appointment']}</td> 
-                                        <td>{$row['_meds']}</td>
-                                        <td>{$row['_test']}</td>
-                                        <td><span class='status-badge active'>Active</span></td>
-                                        <td>
-                                            <div class='action-buttons'>
-                                                <a href='admin-edit.php?id={$row['id']}' class='btn btn-sm btn-edit' onclick=\"return confirm('Are you sure you want to edit this patient?');\">
-                                                    <i class='fas fa-edit'></i>
-                                                </a>
-                                                <a href='admin-delete.php?id={$row['id']}' class='btn btn-sm btn-delete' onclick=\"return confirm('Are you sure you want to delete this patient?');\">
-                                                    <i class='fas fa-trash'></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>";
-
+                                        
+                                        if ($result && $result->num_rows > 0) {
+                                            while ($row = $result->fetch_assoc()) {
+                                                echo "<tr>
+                                                    <td>
+                                                        <div class='patient-avatar'>
+                                                            <img src='uploads/{$row['photo']}' alt='Patient Photo'>
+                                                        </div>
+                                                        <small>ID: {$row['patient__id']}</small>
+                                                    </td>
+                                                    <td>
+                                                        <strong>{$row['first_name']}</strong>
+                                                    </td>
+                                                    <td>
+                                                        <strong>{$row['last_name']}</strong>
+                                                    </td>
+                                                    <td>{$row['age']}</td>
+                                                    <td>{$row['contact']}</td>
+                                                    <td>{$row['_doc']}</td>
+                                                    <td>{$row['_appointment']}</td> 
+                                                    <td>{$row['_meds']}</td>
+                                                    <td>{$row['_test']}</td>
+                                                    <td><span class='status-badge active'>Active</span></td>
+                                                    <td>
+                                                        <div class='action-buttons'>
+                                                            <a href='admin-edit.php?id={$row['id']}' class='btn btn-sm btn-edit' onclick=\"return confirm('Are you sure you want to edit this patient?');\">
+                                                                <i class='fas fa-edit'></i>
+                                                            </a>
+                                                            <a href='admin-delete.php?id={$row['id']}' class='btn btn-sm btn-delete' onclick=\"return confirm('Are you sure you want to delete this patient?');\">
+                                                                <i class='fas fa-trash'></i>
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>";
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='11' style='text-align: center;'>No patients found</td></tr>";
                                         }
                                         ?>
                                     </tbody>
@@ -175,115 +194,372 @@
                             </div>
                             <div class="table-footer">
                                 <div class="table-info">
-                                    Showing <?= $result->num_rows ?> patient records
+                                    Showing <?= $result->num_rows ?? 0 ?> patient records
                                 </div>
-                            
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="content-wrapper" id="dashboard-patients" style="display: none;">
-                                        
-                        <div class="card-container">
-                        <div class="child1 properties">
-                            <?php
-                                        $doctor_id = 1; 
-
-                                        
-                                        $sql = "SELECT fname, lname FROM doctors WHERE id = ?";
-                                        $stmt = $conn->prepare($sql);
-                                        $stmt->bind_param("i", $doctor_id);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-
-                                        if ($result && $result->num_rows > 0) {
-                                            $doctor = $result->fetch_assoc();
-                                            echo htmlspecialchars($doctor['fname']) . " " . htmlspecialchars($doctor['lname']);
-                                        } else {
-                                            echo "Doctor not found.";
-                                        }
-
-                                        $stmt->close();
-                                        ?>
-                        </div>
-                        <div class="child2 properties">
-                                        <?php
-                                        $doctor_id = 2; 
-
-                                        
-                                        $sql = "SELECT fname, lname FROM doctors WHERE id = ?";
-                                        $stmt = $conn->prepare($sql);
-                                        $stmt->bind_param("i", $doctor_id);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-
-                                        if ($result && $result->num_rows > 0) {
-                                            $doctor = $result->fetch_assoc();
-                                            echo htmlspecialchars($doctor['fname']) . " " . htmlspecialchars($doctor['lname']);
-                                        } else {
-                                            echo "Doctor not found.";
-                                        }
-
-                                        $stmt->close();
-                                        ?>
-
-                        </div>
-                        <div class="child3 properties">
-                            <?php
-                                        $doctor_id = 3; 
-
-                                        
-                                        $sql = "SELECT fname, lname FROM doctors WHERE id = ?";
-                                        $stmt = $conn->prepare($sql);
-                                        $stmt->bind_param("i", $doctor_id);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-
-                                        if ($result && $result->num_rows > 0) {
-                                            $doctor = $result->fetch_assoc();
-                                            echo htmlspecialchars($doctor['fname']) . " " . htmlspecialchars($doctor['lname']);
-                                        } else {
-                                            echo "Doctor not found.";
-                                        }
-
-                                        $stmt->close();
-                                        ?>
-                        </div>
-
-                        <div class="child4 properties">
-                            <?php
-                                        $doctor_id = 4; 
-
-                                        
-                                        $sql = "SELECT fname, lname FROM doctors WHERE id = ?";
-                                        $stmt = $conn->prepare($sql);
-                                        $stmt->bind_param("i", $doctor_id);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-
-                                        if ($result && $result->num_rows > 0) {
-                                            $doctor = $result->fetch_assoc();
-                                            echo htmlspecialchars($doctor['fname']) . " " . htmlspecialchars($doctor['lname']);
-                                        } else {
-                                            echo "Doctor not found.";
-                                        }
-
-                                        $stmt->close();
-                                        ?>
-                        </div>
-                        
-                        </div>
-                
-                </div>
                 
                 
                 <div class="content-wrapper" id="dashboard-doctors" style="display: none;">
-                    <div class="card-container"></div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="header-title">
+                                <h1 id="doctors-heading">Our Medical Team</h1>
+                                <div class="breadcrumb">
+                                    <a href="#">Dashboard</a> / <span>Doctors</span>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Add Doctor
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="patients-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Photo</th>
+                                            <th>Doctor Name</th>
+                                            <th>Specialty</th>
+                                            <th>Contact</th>
+                                            <th>Schedule</th>
+                                            <th>Patients</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Doctor 1 -->
+                                        <tr>
+                                            <td>
+                                                <div class="patient-avatar">
+                                                    <img src="uploads/4567.png" alt="Dr. Marvin Acuin">
+                                                </div>
+                                                <small>ID: DOC001</small>
+                                            </td>
+                                            <td>
+                                                <strong>Dr. Marvin Acuin</strong>
+                                            </td>
+                                            <td>
+                                                <div class="specialties-list">
+                                                    <span class="specialty-tag">Gynecology</span>
+                                                    <span class="specialty-tag">Anesthesiologist</span>
+                                                    <span class="specialty-tag">Plastic surgery</span>
+                                                    <span class="specialty-tag">Dermatology</span>
+                                                </div>
+                                            </td>
+                                            <td>+1 234 567 890</td>
+                                            <td>Mon-Fri, 9AM-5PM</td>
+                                            <td>42 Active</td>
+                                            <td><span class="status-badge active">On Duty</span></td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="btn btn-sm btn-edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-delete">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Doctor 2 -->
+                                        <tr>
+                                            <td>
+                                                <div class="patient-avatar">
+                                                    <img src="https://placehold.co/400x400/ffffff/1e40af" alt="Dr. Eitan Maceda">
+                                                </div>
+                                                <small>ID: DOC002</small>
+                                            </td>
+                                            <td>
+                                                <strong>Dr. Eitan Maceda</strong>
+                                            </td>
+                                            <td>
+                                                <div class="specialties-list">
+                                                    <span class="specialty-tag">Cardiologist</span>
+                                                    <span class="specialty-tag">Neurosurgeon</span>
+                                                    <span class="specialty-tag">Military Surgeon</span>
+                                                    <span class="specialty-tag">ER Doctor</span>
+                                                    <span class="specialty-tag">Toxicologist</span>
+                                                </div>
+                                            </td>
+                                            <td>+1 234 567 891</td>
+                                            <td>Mon-Thu, 10AM-6PM</td>
+                                            <td>38 Active</td>
+                                            <td><span class="status-badge active">On Duty</span></td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="btn btn-sm btn-edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-delete">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Doctor 3 -->
+                                        <tr>
+                                            <td>
+                                                <div class="patient-avatar">
+                                                    <img src="uploads/453345.png" alt="Dr. David Heard">
+                                                </div>
+                                                <small>ID: DOC003</small>
+                                            </td>
+                                            <td>
+                                                <strong>Dr. David Heard</strong>
+                                            </td>
+                                            <td>
+                                                <div class="specialties-list">
+                                                    <span class="specialty-tag">Nuclear Medicine</span>
+                                                    <span class="specialty-tag">Radiology</span>
+                                                    <span class="specialty-tag">Anesthesiology</span>
+                                                    <span class="specialty-tag">Forensic Pathology</span>
+                                                </div>
+                                            </td>
+                                            <td>+1 234 567 892</td>
+                                            <td>Tue-Sat, 8AM-4PM</td>
+                                            <td>45 Active</td>
+                                            <td><span class="status-badge active">On Duty</span></td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="btn btn-sm btn-edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-delete">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Doctor 4 -->
+                                        <tr>
+                                            <td>
+                                                <div class="patient-avatar">
+                                                    <img src="https://placehold.co/400x400/ffffff/1e40af" alt="Dr. John Rey">
+                                                </div>
+                                                <small>ID: DOC004</small>
+                                            </td>
+                                            <td>
+                                                <strong>Dr. John Rey</strong>
+                                            </td>
+                                            <td>
+                                                <div class="specialties-list">
+                                                    <span class="specialty-tag">Virologist</span>
+                                                    <span class="specialty-tag">Oncologists</span>
+                                                    <span class="specialty-tag">Colorectal Surgeon</span>
+                                                    <span class="specialty-tag">Psychiatrist</span>
+                                                </div>
+                                            </td>
+                                            <td>+1 234 567 893</td>
+                                            <td>Mon-Fri, 9AM-5PM</td>
+                                            <td>50 Active</td>
+                                            <td><span class="status-badge active">On Duty</span></td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="btn btn-sm btn-edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-delete">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <div class="patient-avatar">
+                                                    <img src="uploads/43.png" alt="Dr. John Rey">
+                                                </div>
+                                                <small>ID: DOC004</small>
+                                            </td>
+                                            <td>
+                                                <strong>Dr. Earl Fred Reyes</strong>
+                                            </td>
+                                            <td>
+                                                <div class="specialties-list">
+                                                    <span class="specialty-tag">Virologist</span>
+                                                    <span class="specialty-tag">Oncologists</span>
+                                                    <span class="specialty-tag">Colorectal Surgeon</span>
+                                                    <span class="specialty-tag">Psychiatrist</span>
+                                                </div>
+                                            </td>
+                                            <td>+1 234 567 893</td>
+                                            <td>Mon-Fri, 9AM-5PM</td>
+                                            <td>50 Active</td>
+                                            <td><span class="status-badge active">On Duty</span></td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="btn btn-sm btn-edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-delete">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-footer">
+                                <div class="table-info">
+                                    Showing 4 doctor records
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="content-wrapper" id="dashboard-team" style="display: none;">
-                    <div class="card-container"></div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="header-title">
+                                <h1 id="team-heading">Our Team</h1>
+                                <div class="breadcrumb">
+                                    <a href="#">Dashboard</a> / <span>Team</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- Featured Team Member -->
+                            <div class="featured-member">
+                                <div class="featured-member-card">
+                                    <div class="member-image">
+                                        <img src="uploads/494818551_1220394019597470_1151985093978820945_n.jpg" alt="Featured Team Member">
+                                        <div class="member-overlay">
+                                            <span class="role-tag">Team Lead</span>
+                                        </div>
+                                    </div>
+                                    <div class="member-info">
+                                        <h2>Dr. Sarah Mitchell</h2>
+                                        <p class="role">Chief Medical Officer</p>
+                                        <div class="member-stats">
+                                            <div class="stat">
+                                                <span class="stat-value">15+</span>
+                                                <span class="stat-label">Years Experience</span>
+                                            </div>
+                                            <div class="stat">
+                                                <span class="stat-value">250+</span>
+                                                <span class="stat-label">Surgeries</span>
+                                            </div>
+                                            <div class="stat">
+                                                <span class="stat-value">98%</span>
+                                                <span class="stat-label">Success Rate</span>
+                                            </div>
+                                        </div>
+                                        <div class="member-contact">
+                                            <button class="contact-btn">
+                                                <i class="fas fa-envelope"></i>
+                                                Contact
+                                            </button>
+                                            <div class="social-links">
+                                                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                                <a href="#" class="social-link"><i class="fas fa-globe"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Team Members Grid -->
+                            <div class="team-grid">
+                                <!-- Team Member 1 -->
+                                <div class="team-member-card">
+                                    <div class="member-image">
+                                        <img src="https://placehold.co/400x400/ffffff/1e40af" alt="Team Member 1">
+                                        <div class="member-overlay">
+                                            <span class="role-tag">Specialist</span>
+                                        </div>
+                                    </div>
+                                    <div class="member-info">
+                                        <h3>David T. Heard</h3>
+                                        <p class="role">Back-end Developer</p>
+                                        <div class="member-stats-mini">
+                                            <span>2nd Year</span>
+                                            <span>•</span>
+                                            <span>BSIT</span>
+                                        </div>
+                                        <div class="member-contact">
+                                            <button class="contact-btn-mini">
+                                                <i class="fas fa-envelope"></i>
+                                            </button>
+                                            <div class="social-links">
+                                                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Team Member 2 -->
+                                <div class="team-member-card">
+                                    <div class="member-image">
+                                        <img src="https://placehold.co/400x400/ffffff/1e40af" alt="Team Member 2">
+                                        <div class="member-overlay">
+                                            <span class="role-tag">Expert</span>
+                                        </div>
+                                    </div>
+                                    <div class="member-info">
+                                        <h3>Eitan Dwane B. Maceda</h3>
+                                        <p class="role">Front-end Developer</p>
+                                        <div class="member-stats-mini">
+                                            <span>2nd Year</span>
+                                            <span>•</span>
+                                            <span>BSIT</span>
+                                        </div>
+                                        <div class="member-contact">
+                                            <button class="contact-btn-mini">
+                                                <i class="fas fa-envelope"></i>
+                                            </button>
+                                            <div class="social-links">
+                                                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Team Member 3 -->
+                                <div class="team-member-card">
+                                    <div class="member-image">
+                                        <img src="https://placehold.co/400x400/ffffff/1e40af" alt="Team Member 3">
+                                        <div class="member-overlay">
+                                            <span class="role-tag">Senior</span>
+                                        </div>
+                                    </div>
+                                    <div class="member-info">
+                                        <h3>Marvin T. Acuin</h3>
+                                        <p class="role">UI / UX Designer</p>
+                                        <div class="member-stats-mini">
+                                            <span>2nd Year</span>
+                                            <span>•</span>
+                                            <span>BSIT</span>
+                                        </div>
+                                        <div class="member-contact">
+                                            <button class="contact-btn-mini">
+                                                <i class="fas fa-envelope"></i>
+                                            </button>
+                                            <div class="social-links">
+                                                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </main>
