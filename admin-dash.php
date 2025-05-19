@@ -90,7 +90,7 @@ if ($result && $result->num_rows > 0) {
                     </ul>
                 </nav>
                 <div class="sidebar-footer">
-                    <a href="landingPage2.php" class="logout-btn">
+                    <a href="index.php" class="logout-btn">
                         <i class="fas fa-sign-out-alt"></i>
                         <span>Logout</span>
                     </a>
@@ -246,9 +246,7 @@ if ($result && $result->num_rows > 0) {
                                 </div>
                             </div>
                             <div class="card-actions">
-                                <button class="btn btn-primary">
-                                    <i class="fas fa-plus"></i> Add Doctor
-                                </button>
+                               
                             </div>
                         </div>
                         <div class="card-body">
@@ -263,7 +261,7 @@ if ($result && $result->num_rows > 0) {
                                             <th>Schedule</th>
                                             <th>Patients</th>
                                             <th>Status</th>
-                                            <th>Actions</th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -291,24 +289,16 @@ if ($result && $result->num_rows > 0) {
                                             <td>0<?php echo  $doctors[0]['contact']; ?></td>
                                             <td>Mon-Fri, 9AM-5PM</td>
                                             <td>42 Active</td>
-                                            <td><span class="status-badge active">On Duty</span></td>
-                                            <td>
-                                                <div class="action-buttons">
-                                                    <button class="btn btn-sm btn-edit">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-delete">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
+                                            <td><span class="status-badge" onclick="toggleStatus(this)">On Duty</span></td>
+
+                                           
                                         </tr>
 
                                         <!-- Doctor 2 -->
                                         <tr>
                                             <td>
                                                 <div class="patient-avatar">
-                                                    <img src="https://placehold.co/400x400/ffffff/1e40af" alt="Dr. Eitan Maceda">
+                                                    <img src="uploads/5345.png" alt="Dr. Eitan Maceda">
                                                 </div>
                                                 <small>ID: DOC002</small>
                                             </td>
@@ -327,17 +317,8 @@ if ($result && $result->num_rows > 0) {
                                             <td>0<?php echo  $doctors[2]['contact']; ?></td>
                                             <td>Mon-Thu, 10AM-6PM</td>
                                             <td>38 Active</td>
-                                            <td><span class="status-badge active">On Duty</span></td>
-                                            <td>
-                                                <div class="action-buttons">
-                                                    <button class="btn btn-sm btn-edit">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-delete">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
+                                            <td><span class="status-badge active" onclick="toggleStatus(this)">On Duty</span></td>
+                                            
                                         </tr>
 
                                         <!-- Doctor 3 -->
@@ -362,17 +343,8 @@ if ($result && $result->num_rows > 0) {
                                             <td>0<?php echo  $doctors[1]['contact']; ?></td>
                                             <td>Tue-Sat, 8AM-4PM</td>
                                             <td>45 Active</td>
-                                            <td><span class="status-badge active">On Duty</span></td>
-                                            <td>
-                                                <div class="action-buttons">
-                                                    <button class="btn btn-sm btn-edit">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-delete">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
+                                            <td><span class="status-badge active" onclick="toggleStatus(this)">On Duty</span></td>
+                                           
                                         </tr>
 
                                         <!-- Doctor 4 -->
@@ -397,17 +369,8 @@ if ($result && $result->num_rows > 0) {
                                             <td>0<?php echo  $doctors[3]['contact']; ?></td>
                                             <td>Mon-Fri, 9AM-5PM</td>
                                             <td>50 Active</td>
-                                            <td><span class="status-badge active">On Duty</span></td>
-                                            <td>
-                                                <div class="action-buttons">
-                                                    <button class="btn btn-sm btn-edit">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-delete">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
+                                            <td><span class="status-badge active" onclick="toggleStatus(this)">On Duty</span></td>
+                                           
                                         </tr>
 
                                         <tr>
@@ -431,17 +394,8 @@ if ($result && $result->num_rows > 0) {
                                             <td>0<?php echo  $doctors[4]['contact']; ?></td>
                                             <td>Mon-Fri, 9AM-5PM</td>
                                             <td>50 Active</td>
-                                            <td><span class="status-badge active">On Duty</span></td>
-                                            <td>
-                                                <div class="action-buttons">
-                                                    <button class="btn btn-sm btn-edit">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-delete">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
+                                            <td><span class="status-badge off active" onclick="toggleStatus(this)">Off Duty</span></td>
+                                            
                                         </tr>
                                     </tbody>
                                 </table>

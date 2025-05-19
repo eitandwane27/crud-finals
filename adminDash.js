@@ -316,8 +316,23 @@ document.head.appendChild(style);
 const navTeam = document.getElementById("nav-team");
 const sound = new Audio("music/kikek.wav");
 
-navTeam.addEventListener("click", () => {
+navTeam.addEventListener("click", (e) => {
     sound.currentTime = 0;
     sound.volume = 1;
     sound.play();
+    e.stopPropagation(); // Prevents the body click from firing immediately
 });
+
+document.body.addEventListener("click", () => sound.pause());
+
+const toggleStatus = (el) => {
+    if (el.classList.contains("off")) {
+        el.classList.remove("off");
+        el.textContent = "On Duty";
+        cursor: pointer;
+    } else {
+        el.classList.add("off");
+        el.textContent = "Off Duty";
+        cursor: pointer;
+    }
+};

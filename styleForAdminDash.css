@@ -524,6 +524,22 @@ small {
 .status-badge:hover {
     background: rgba(16, 185, 129, 0.2);
     transform: translateY(-1px);
+    cursor: pointer;
+}
+
+.status-badge.off:hover {
+    background: rgba(239, 68, 68, 0.2); /* darker red on hover */
+    transform: translateY(-1px);
+}
+.status-badge.off {
+    background: rgba(239, 68, 68, 0.1); /* red background */
+    color: #ef4444; /* red text */
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.status-badge.off:hover {
+    background: rgba(239, 68, 68, 0.2); /* darker red on hover */
+    transform: translateY(-1px);
 }
 
 .action-buttons {
@@ -1096,6 +1112,17 @@ small {
 
 .status-badge:hover {
     background: rgba(16, 185, 129, 0.2);
+    transform: translateY(-1px);
+}
+
+.status-badge.off {
+    background: rgba(239, 68, 68, 0.1); /* red background */
+    color: #ef4444; /* red text */
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.status-badge.off:hover {
+    background: rgba(239, 68, 68, 0.2); /* darker red on hover */
     transform: translateY(-1px);
 }
 
