@@ -259,9 +259,7 @@ $lname = !empty($userInfo['lname']) ? htmlspecialchars($userInfo['lname']) : 'No
                         <h3>Your Medical Team</h3>
                         <div class="doctor-list">
                             <div class="doctor-item">
-                                <div class="doctor-avatar">
-                                    <img src="uploads/4567.png" alt="Doctor Avatar">
-                                </div>
+                                
                                 <div class="doctor-info">
                                     <h4><?=$doctorInfo?></h4>
                                     <p>Cardiologist</p>
@@ -271,9 +269,7 @@ $lname = !empty($userInfo['lname']) ? htmlspecialchars($userInfo['lname']) : 'No
                                 </div>
                             </div>
                             <div class="doctor-item">
-                                <div class="doctor-avatar">
-                                    <img src="https://randomuser.me/api/portraits/women/64.jpg" alt="Doctor Avatar">
-                                </div>
+                                
                                 <div class="doctor-info">
                                     <h4>RN Sarah Chen</h4>
                                     <p>Nurse</p>
@@ -464,7 +460,7 @@ $lname = !empty($userInfo['lname']) ? htmlspecialchars($userInfo['lname']) : 'No
 
                                 <?php if ($glucose < 70 || $glucose > 100): ?>
                                     <div class="metric-status not-normal">Abnormal</div>
-                                <?php else: ?>
+                               <?php else: ?>
                                     <div class="metric-status normal">Normal</div>
                                 <?php endif; ?>
 

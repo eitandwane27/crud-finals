@@ -79,7 +79,8 @@ if (isset($_GET['id'])) {
                 <option value="Dr. Marvin Acuin" <?= $row['_doc'] == 'Dr. Marvin Acuin' ? 'selected' : '' ?>>Dr. Marvin Acuin</option>
                 <option value="Dr. Eitan Maceda" <?= $row['_doc'] == 'Dr. Eitan Maceda' ? 'selected' : '' ?>>Dr. Eitan Maceda</option>
                 <option value="Dr. David Heard" <?= $row['_doc'] == 'Dr. David Heard' ? 'selected' : '' ?>>Dr. David Heard</option>
-                <option value="Dr. John Rey" <?= $row['_doc'] == 'Dr. John Rey' ? 'selected' : '' ?>>Dr. John Rey</option>
+                <option value="Dr. John Marcellana" <?= $row['_doc'] == 'Dr. John Marcellana' ? 'selected' : '' ?>>Dr. John Marcellana</option>
+                <option value="Dr. Eralfred Reyes" <?= $row['_doc'] == 'Dr. Dr. Eralfred Reyes' ? 'selected' : '' ?>>Dr. Dr. Eralfred Reyes</option>
             </select>
         </div>
 
@@ -251,35 +252,45 @@ if (isset($_POST['update'])) {
         move_uploaded_file($_FILES['photo']['tmp_name'], "uploads/" . basename($photo));
     }
 
-    // Update user_info
-    $stmt1 = $conn->prepare("
-        UPDATE user_info SET
-        first_name=?, last_name=?, age=?, address=?, contact=?, _sex=?, _doc=?, _appointment=?, _meds=?, _test=?,
-        photo=?, systolic=?, diastolic=?, bpm=?, cholesterol=?, glucose=?, last_date=?, 
-        med1=?, med2=?, med_sched1=?, med_sched2=?
-        WHERE id=?
-    ");
-    $stmt1->bind_param("sssssssssssssssssssssi",
-        $first_name, $last_name, $age, $address, $contact,
-        $_sex, $_doc, $_appointment, $_meds, $_test,
-$photo, $systolic, $diastolic, $bpm, $cholesterol, $glucose, $last_date,
-$med1, $med2, $med_sched1, $med_sched2,
-$id
-);
-$stmt1->execute();
+    // Check for duplicate patient__id except for current user
+    $stmtCheck = $conn->prepare("SELECT id FROM users WHERE patient__id = ? AND id != ?");
+    $stmtCheck->bind_param("si", $patient__id, $id);
+    $stmtCheck->execute();
+    $stmtCheck->store_result();
 
-// Update users (patient__id and password)
-if (empty($password)) {
-    $stmt2 = $conn->prepare("UPDATE users SET patient__id=? WHERE id=?");
-    $stmt2->bind_param("si", $patient__id, $id);
-} else {
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    $stmt2 = $conn->prepare("UPDATE users SET patient__id=?, password=? WHERE id=?");
-    $stmt2->bind_param("ssi", $patient__id, $hashedPassword, $id);
-}
-$stmt2->execute();
+    if ($stmtCheck->num_rows > 0) {
+        echo "<script>alert('Patient ID already exists. Please choose a different one.');</script>";
+    } else {
+        // Update user_info
+        $stmt1 = $conn->prepare("
+            UPDATE user_info SET
+            first_name=?, last_name=?, age=?, address=?, contact=?, _sex=?, _doc=?, _appointment=?, _meds=?, _test=?,
+            photo=?, systolic=?, diastolic=?, bpm=?, cholesterol=?, glucose=?, last_date=?, 
+            med1=?, med2=?, med_sched1=?, med_sched2=?
+            WHERE id=?
+        ");
+        $stmt1->bind_param("sssssssssssssssssssssi",
+            $first_name, $last_name, $age, $address, $contact,
+            $_sex, $_doc, $_appointment, $_meds, $_test,
+            $photo, $systolic, $diastolic, $bpm, $cholesterol, $glucose, $last_date,
+            $med1, $med2, $med_sched1, $med_sched2,
+            $id
+        );
+        $stmt1->execute();
 
-echo "<script>window.location.href='admin-dash.php';</script>";
-exit;
+        // Update users (patient__id and password)
+        if (empty($password)) {
+            $stmt2 = $conn->prepare("UPDATE users SET patient__id=? WHERE id=?");
+            $stmt2->bind_param("si", $patient__id, $id);
+        } else {
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $stmt2 = $conn->prepare("UPDATE users SET patient__id=?, password=? WHERE id=?");
+            $stmt2->bind_param("ssi", $patient__id, $hashedPassword, $id);
+        }
+        $stmt2->execute();
+
+        echo "<script>alert('Patient updated successfully!'); window.location.href='admin-dash.php';</script>";
+        exit;
+    }
 }
 ?>
