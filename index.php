@@ -28,7 +28,7 @@ unset($_SESSION['show_success'], $_SESSION['show_error']);
                 <li><a href="#testimonials">Testimonials</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
-            <a href="loginAs.html" target="_blank" class="btn-login">Login</a>
+            <a href="loginAs.html" target="" class="btn-login">Login</a>
         </nav>
     </header>
 
