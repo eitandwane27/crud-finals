@@ -367,9 +367,6 @@ body {
     transition: transform 0.3s ease;
 }
 
-.card:hover {
-}
-
 .card-header {
     padding: var(--space-lg) var(--space-xl);
     border-bottom: 1px solid var(--surface-light);
