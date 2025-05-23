@@ -11,12 +11,15 @@ unset($_SESSION['show_success'], $_SESSION['show_error']);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Healthcare Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="app.js"></script>
     <link rel="stylesheet" href="styleForLandingPage.css" />
+    
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
-    <script defer src="app.js"></script>
+   
 </head>
 <body>
     <header>
@@ -33,6 +36,28 @@ unset($_SESSION['show_success'], $_SESSION['show_error']);
     </header>
 
     <main>
+    
+    <!-- chatbot -->
+    <div class="chat-container">
+            <div class="chat-header">
+                <div class="online-indicator">
+                    <div class="online-dot"></div>
+                </div>
+                <h1>Ask MediBot!</h1>
+            </div>
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input-container">
+                <input
+                    type="text"
+                    id="user-input"
+                    placeholder="Type your message..."
+                />
+                <button id="send-button">Send</button>
+                <script src="script.js"></script>
+            </div>
+        </div>
+
+
         <!-- Home Section -->
         <section id="home" class="section home-section">
             <div class="section-container">
@@ -132,7 +157,7 @@ unset($_SESSION['show_success'], $_SESSION['show_error']);
                         <div class="dashboard-card primary-card">
                             <div class="card-image-container">
                                 <div class="card-image-placeholder">
-                                    <i class="fas fa-hospital pulse-icon"></i>
+                                    <i class="fas fa-hospital"></i>
                                 </div>
                             </div>
                             <h3>Healthcare Hub</h3>
@@ -288,11 +313,11 @@ unset($_SESSION['show_success'], $_SESSION['show_error']);
                             <div class="metric-content">
                                 <h4>Avg. Wait Time</h4>
                                 <div class="metric-chart">
-                                    <div class="chart-bar" style="width: 25%"></div>
+                                    <div class="chart-bar" style="width: 100%"></div>
                                 </div>
                                 <div class="metric-value">
                                     <span class="value">Instant</span>
-                                    <span class="trend positive"><i class="fas fa-arrow-down"></i> 30%</span>
+                                    <span class="trend positive"><i class="fas fa-arrow-up"></i> 30%</span>
                                 </div>
                             </div>
                         </div>
@@ -541,11 +566,12 @@ unset($_SESSION['show_success'], $_SESSION['show_error']);
             }, 4000); // hide after 4 seconds
         }
     });
-</script>                                 
+</script>
 
 
 </body>
-
-
-
 </html>
+
+
+
+
